@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en,fr">
+      <head>
+	  <meta charset="utf-8">
+	  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+      <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1.0, user-scalable=yes">
+	  <meta name="mobile-web-app-capable" content="yes">
+      <meta name="apple-mobile-web-app-capable" content="yes">
+  
+  
+	        <title>PharMap Togo</title>
+			<script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+			
+		 <link rel="import" href="bower_components/polymer/polymer.html">
+		 <link rel="import" href="bower_components/paper-item/paper-item.html">
+		 <link rel="import" href="bower_components/paper-menu/paper-menu.html">
+		 <link rel="import" href="bower_components/paper-styles/paper-styles.html">
+		 <link rel="import" href="bower_components/paper-styles/demo-pages.html">
+		
+		 <link rel="import" href="bower_components/iron-component-page/iron-component-page.html">
+		 <link rel="import" href="bower_components/iron-icons/iron-icons.html">
+		 <link rel="import" href="bower_components/paper-icon-button/paper-icon-button.html">
+		
+		 <link rel="import" href="bower_components/paper-fab/paper-fab.html">
+		 <link rel="import" href="bower_components/paper-toolbar/paper-toolbar.html">
+		 
+		 <link rel="import" href="bower_components/paper-ripple/paper-ripple.html">
+		 <link rel="import" href="bower_components/paper-styles/classes/typography.html">
+		 <link rel="import" href="bower_components/iron-icon/iron-icon.html">
+		 
+		 <link rel="import" href="bower_components/paper-radio-button/paper-radio-button.html">
+         <link rel="import" href="bower_components/paper-radio-group/paper-radio-group.html">
+		 
+		 <link rel="import" href="bower_components/paper-header-panel/paper-header-panel.html">
+		 <link rel="import" href="bower_components/components/paper-tabs/paper-tabs.html">
+		 <link rel="import" href="bower_components/paper-drawer-panel/paper-drawer-panel.html">
+		 <link rel="import" href="bower_components/paper-material/paper-material.html">
+		 
+		 <link rel="import" href="bower_components/google-signin/google-signin.html">
+		 <link rel="import" href="bower_components/google-map/google-map.html">
+		 <link rel="import" href="bower_components/google-map/google-map-search.html">
+		 <link rel="import" href="bower_components/classes/iron-flex-layout.html">
+		 
+		 <link rel="import" href="bower_components/google-sheets/google-sheets.html">
+		 <link rel="import" href="bower_components/google-map-marker/google-map-marker.html">
+         <link rel="import" href="bower_components/google-map-directions/google-map-directions.html">
+		
+</head>
+
+<style>
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 2em;
+      font-family: 'Roboto', 'Helvetica Neue', Helvetica, Arial;
+      font-weight: 300;
+      background-color: #f1f1f3;
+    }
+    a {
+      text-decoration: none;
+      color: blue;
+    }
+    ul {
+      padding-left: 0;
+    }
+    ul, li {
+      list-style: none;
+      font-size: 14px;
+    }
+    section {
+      border-radius: 3px;
+      box-shadow: 1px 1px 3px #ccce;
+      padding: 1em 2em;
+      background-color: Lavender;
+      width: 500px;
+      height: 500px;
+    }
+    google-map {
+      display: block;
+      height: 100%;
+      width: 100%;
+    }
+    main {
+      justify-content: space-around;
+      margin-top: 2em;
+    }
+	
+	#main-button.colorful{
+	display: inline-block;
+   	margin-bottom: 16px;
+	background: #DCDCDC;
+    color: #FFFFFF;
+	padding: 2px;
+    }
+	
+  </style>
+
+<body>
+
+<paper-header-panel>
+    
+	<paper-toolbar>
+	<div class="paper-header"><h1>PharMap - Localisation des pharmacies au Togo</h1></div>
+	  
+	</paper-toolbar>  
+    </paper-header-panel>
+
+<p>Par <a href="https://twitter.com/etechnopole" target="_blank" title="Oui c'est moi &rarr;">@etechnopole</a> - Incubée par <a href="http://gdg-lome.org/" target="_blank" title="Groupe de Développeurs Google - Women TechMakers &rarr;">GDG - WTM Lomé</a></p>
+
+<span class="vertical-align center-justified">
+			<paper-button id="main-button" class="colorful custom" raised><a href="/private.html" target="_blank" title="Localisation des Hôpitaux, Cliniques et Vétérinaires au Togo &rarr;">MediMap</a></paper-button>
+		</span>	
+	 
+<main class="layout horizontal">
+
+<template id="container" is="dom-bind">
+
+  <section>
+
+      <!-- Example: published spreadsheet -->
+      <google-sheets id="sheet" key="1bM3OD1iXo_Xai7D-YqeYihSpoW_7tML5V2i6qlzfIMI" tab-id="1"
+                     published rows="{{rows}}" tab="{{tab}}" open-in-google-docs-url="{{openInGoogleDocsUrl}}"></google-sheets>
+
+      <heading>
+        <h3>INFO des pharmacies:
+          <a href="{{openInGoogleDocsUrl}}" target="_blank" title="Open in Google Docs &rarr;">
+            <span>{{tab.title}}</span>
+          </a>
+        </h3>
+        <h5>Mise à jour: <span>{{tab.updated}}</span>. 
+		<br>
+		Par: <template is="dom-repeat" items="{{rows.authors}}">{{item.name}}</template></h5>
+      </heading>
+	  <p>
+      <ul>
+        <template is="dom-repeat" items="[[rows]]">
+          <li><!--Nom:--><span>{{item.gsx$nom.$t}}</span> & Tel: <span>{{item.gsx$tel.$t}}</span> (Lat: <span>{{item.gsx$lat.$t}}</span>, Long: <span>{{item.gsx$long.$t}}</span>)</li>
+		  
+        </template>
+      </ul>
+	  </p>
+
+  </section>
+  
+		
+  <section style="padding: 0;">
+  
+    <google-map disable-default-ui fit-to-markers>
+      <template is="dom-repeat" items="[[rows]]">
+        <google-map-marker latitude="{{item.gsx$lat.$t}}" longitude="{{item.gsx$long.$t}}"></google-map-marker>
+      </template>
+    </google-map>
+	
+	
+	<br>
+
+    <button on-click="useTab" data-tabid="1">VOIR<iron-icon icon="check"></iron-icon></button>
+    <button on-click="useTab" data-tabid="2">VOIR PLUS<iron-icon icon="check"></iron-icon></button>
+	    
+
+  </section>
+
+</template>
+</main>
+
+	<script>
+		var template = document.querySelector('#container');
+		template.useTab = function(e, detail, sender) {
+		  document.querySelector('#sheet').tabId = Number(e.currentTarget.dataset.tabid);
+		};
+	</script>
+
+</body>
+</html>		 
